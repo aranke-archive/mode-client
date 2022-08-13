@@ -21,13 +21,13 @@ def report_id():
 def test_account_organization(mode_client):
     user = mode_client.account.get("modeanalytics")
     assert user.user is False
-    assert user.token == '22aa79951300'
+    assert user.token == "22aa79951300"
 
 
 def test_account_user(mode_client):
     user = mode_client.account.get("benn")
     assert user.user is True
-    assert user.token == '5ab1de2572d6'
+    assert user.token == "5ab1de2572d6"
 
 
 def test_space(mode_client):
@@ -49,7 +49,7 @@ def test_report_run(mode_client, report_id):
 def test_query(mode_client, report_id):
     queries = mode_client.query.list(report_id)
     assert len(queries) == 1
-    assert queries[0].token == '48062b54257b'
+    assert queries[0].token == "48062b54257b"
 
 
 def test_query_run(mode_client, report_id):

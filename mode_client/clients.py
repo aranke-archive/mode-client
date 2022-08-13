@@ -1,11 +1,19 @@
 from datetime import date, timedelta
 from json import JSONDecodeError
-from typing import Optional, Dict, Any, Literal, List
+from typing import Any, Dict, List, Literal, Optional
 
 import httpx
 from pydantic import parse_obj_as
 
-from mode_client.models import Space, Report, Query, QueryRun, ReportRun, ReportRuns, Account
+from mode_client.models import (
+    Account,
+    Query,
+    QueryRun,
+    Report,
+    ReportRun,
+    ReportRuns,
+    Space,
+)
 
 
 class ModeBaseClient:
@@ -17,11 +25,11 @@ class ModeBaseClient:
         )
 
     def request(
-            self,
-            method: str,
-            resource: str,
-            json: Optional[Dict] = None,
-            params: Optional[Dict] = None,
+        self,
+        method: str,
+        resource: str,
+        json: Optional[Dict] = None,
+        params: Optional[Dict] = None,
     ) -> Any:
         if params:
             params = {k: v for k, v in params.items() if v}
@@ -59,7 +67,7 @@ class ModeQueryClient(ModeBaseClient):
         return parse_obj_as(List[Query], response["_embedded"]["queries"])
 
     def create(
-            self, report: str, raw_query: str, data_source_id: int, name: str
+        self, report: str, raw_query: str, data_source_id: int, name: str
     ) -> Query:
         json = {
             "query": {
@@ -73,7 +81,7 @@ class ModeQueryClient(ModeBaseClient):
         return Query.parse_obj(response)
 
     def update(
-            self, report: str, query: str, raw_query: str, data_source_id: int, name: str
+        self, report: str, query: str, raw_query: str, data_source_id: int, name: str
     ) -> Query:
         json = {
             "query": {
@@ -82,7 +90,9 @@ class ModeQueryClient(ModeBaseClient):
                 "name": name,
             }
         }
-        response = self.request("PATCH", f"/reports/{report}/queries/{query}", json=json)
+        response = self.request(
+            "PATCH", f"/reports/{report}/queries/{query}", json=json
+        )
 
         return Query.parse_obj(response)
 
@@ -94,7 +104,9 @@ class ModeQueryClient(ModeBaseClient):
 
 class ModeQueryRunClient(ModeBaseClient):
     def get(self, report: str, run: str, query_run: str) -> QueryRun:
-        response = self.request("GET", f"/reports/{report}/runs/{run}/query_runs/{query_run}")
+        response = self.request(
+            "GET", f"/reports/{report}/runs/{run}/query_runs/{query_run}"
+        )
 
         return QueryRun.parse_obj(response)
 
@@ -111,15 +123,15 @@ class ModeReportClient(ModeBaseClient):
         return Report.parse_obj(response)
 
     def list(
-            self,
-            data_source: Optional[str] = None,
-            space: Optional[str] = None,
-            _filter: Optional[str] = None,
-            order: Literal["asc", "desc"] = "desc",
-            order_by: Literal["created_at", "updated_at"] = "updated_at",
+        self,
+        data_source: Optional[str] = None,
+        space: Optional[str] = None,
+        _filter: Optional[str] = None,
+        order: Literal["asc", "desc"] = "desc",
+        order_by: Literal["created_at", "updated_at"] = "updated_at",
     ) -> List[Report]:
         assert (
-                bool(data_source) + bool(space) == 1
+            bool(data_source) + bool(space) == 1
         ), "Only one of data_source, space can be defined"
 
         url = (
@@ -134,7 +146,7 @@ class ModeReportClient(ModeBaseClient):
         return parse_obj_as(List[Report], response["_embedded"]["reports"])
 
     def update(
-            self, report: str, name: str, description: str, space_token: str
+        self, report: str, name: str, description: str, space_token: str
     ) -> Report:
         json = {"name": name, "description": description, "space_token": space_token}
         response = self.request("PATCH", f"/reports/{report}", json=json)
@@ -175,15 +187,18 @@ class ModeReportRunClient(ModeBaseClient):
         return ReportRun.parse_obj(response)
 
     def list(
-            self,
-            report: str,
-            filter_: Optional[str] = None,
-            order: Literal["asc", "desc"] = "desc",
-            order_by: Literal["created_at", "updated_at"] = "updated_at",
+        self,
+        report: str,
+        filter_: Optional[str] = None,
+        order: Literal["asc", "desc"] = "desc",
+        order_by: Literal["created_at", "updated_at"] = "updated_at",
     ) -> ReportRuns:
         params = {"filter": filter_, "order": order, "order_by": order_by}
         raw_response = self.request("GET", f"/reports/{report}/runs", params=params)
-        response = {'pagination': raw_response['pagination'], 'report_runs': raw_response['_embedded']['report_runs']}
+        response = {
+            "pagination": raw_response["pagination"],
+            "report_runs": raw_response["_embedded"]["report_runs"],
+        }
 
         return ReportRuns.parse_obj(response)
 
