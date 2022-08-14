@@ -211,10 +211,10 @@ class ModeReportRunClient(ModeBaseClient):
 
 class ModeSpaceClient(ModeBaseClient):
     def get(self, space: str) -> Space:
-        response = self.request("POST", f"/spaces/{space}")
+        response = self.request("GET", f"/spaces/{space}")
         return Space.parse_obj(response)
 
-    def list(self, filter_: Optional[Literal["all"]] = None) -> List[Space]:
+    def list(self, filter_: Literal["all", "custom"] = "custom") -> List[Space]:
         params = {"filter": filter_}
         response = self.request("GET", "/spaces", params=params)
 
