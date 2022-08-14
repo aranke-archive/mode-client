@@ -3,13 +3,19 @@ name = "mode-client"
 version = "1.0.0"
 description = "A typed Python client for the Mode API"
 authors = ["Kshitij Aranke <kshitij@aranke.org>"]
-
 readme = "README.md"
+
+[tool.poetry.scripts]
+mode = "mode_client.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.7"
 pydantic = "^1.9"
 httpx = "^0.23"
+typer = "^0.6"
+environs = "^9.5"
+rich = "^12.5"
+shellingham = "^1.5.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1"

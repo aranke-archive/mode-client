@@ -96,10 +96,8 @@ class ModeQueryClient(ModeBaseClient):
 
         return Query.parse_obj(response)
 
-    def delete(self, report: str, query: str) -> Query:
-        response = self.request("DELETE", f"/reports/{report}/queries/{query}")
-
-        return Query.parse_obj(response)
+    def delete(self, report: str, query: str):
+        self.request("DELETE", f"/reports/{report}/queries/{query}")
 
 
 class ModeQueryRunClient(ModeBaseClient):
@@ -247,9 +245,30 @@ class ModeSpaceClient(ModeBaseClient):
 
 class ModeClient:
     def __init__(self, workspace: str, token: str, password: str):
-        self.account = ModeAccountClient(workspace, token, password)
-        self.query = ModeQueryClient(workspace, token, password)
-        self.query_run = ModeQueryRunClient(workspace, token, password)
-        self.report = ModeReportClient(workspace, token, password)
-        self.report_run = ModeReportRunClient(workspace, token, password)
-        self.space = ModeSpaceClient(workspace, token, password)
+        self.workspace = workspace
+        self.token = token
+        self.password = password
+
+    @property
+    def account(self):
+        return ModeAccountClient(self.workspace, self.token, self.password)
+
+    @property
+    def query(self):
+        return ModeQueryClient(self.workspace, self.token, self.password)
+
+    @property
+    def query_run(self):
+        return ModeQueryRunClient(self.workspace, self.token, self.password)
+
+    @property
+    def report(self):
+        return ModeReportClient(self.workspace, self.token, self.password)
+
+    @property
+    def report_run(self):
+        return ModeReportRunClient(self.workspace, self.token, self.password)
+
+    @property
+    def space(self):
+        return ModeSpaceClient(self.workspace, self.token, self.password)
