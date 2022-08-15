@@ -1,10 +1,16 @@
 import os
+import time
 
 import pytest
 from dotenv import load_dotenv
 
 from mode_client import ModeClient
 
+
+@pytest.fixture(autouse=True)
+def throttle():
+    yield
+    time.sleep(3)
 
 @pytest.fixture
 def report_id():
