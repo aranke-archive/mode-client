@@ -4,10 +4,9 @@
 
 from __future__ import annotations
 
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Literal
 
 from pydantic import BaseModel, Field
-from typing_extensions import Literal
 
 
 class Link(BaseModel):
@@ -350,7 +349,7 @@ class Account(BaseModel):
     payment_method_confirmed: Optional[bool]
     private_definition_count: Optional[int]
     private_definition_limit: Union[Optional[int], Literal["unlimited"]]
-    authorized_domains: Optional[list[str]]
+    authorized_domains: Optional[List[str]]
     plan_code: Optional[Literal["standard", "plus", "free"]]
     admin_data_source_connections_only: Optional[bool]
     scim_enabled: Optional[str]
