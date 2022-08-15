@@ -2,6 +2,8 @@
 
 `mode-client` is a typed Python client for the [Mode API](https://mode.com/developer/api-reference/introduction/).
 
+---
+
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mode-client)
 ![PyPI](https://img.shields.io/pypi/v/mode-client)
 ![PyPI - License](https://img.shields.io/pypi/l/mode-client)
