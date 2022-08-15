@@ -9,7 +9,6 @@ from mode_client import ModeClient
 
 @pytest.fixture(autouse=True)
 def throttle():
-    yield
     time.sleep(3)
 
 @pytest.fixture
