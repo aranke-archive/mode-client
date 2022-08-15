@@ -65,9 +65,7 @@ class ModeQueryClient(ModeBaseClient):
 
         return parse_obj_as(List[Query], response["_embedded"]["queries"])
 
-    def create(
-        self, report: str, raw_query: str, data_source_id: int, name: str
-    ) -> Query:
+    def create(self, report: str, raw_query: str, data_source_id: int, name: str):
         json = {
             "query": {
                 "raw_query": raw_query,
