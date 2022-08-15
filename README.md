@@ -2,8 +2,6 @@
 
 `mode-client` is a typed Python client for the [Mode API](https://mode.com/developer/api-reference/introduction/).
 
----
-
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mode-client)
 ![PyPI](https://img.shields.io/pypi/v/mode-client)
 ![PyPI - License](https://img.shields.io/pypi/l/mode-client)
@@ -11,8 +9,6 @@
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/k-aranke/mode-client/Test)
 ![pre-commit.ci status](https://results.pre-commit.ci/badge/github/k-aranke/mode-client/main.svg)
 ![Codecov](https://img.shields.io/codecov/c/github/k-aranke/mode-client)
-
----
 
 ## Installation
 
@@ -22,8 +18,6 @@
 pip install mode-client
 ```
 
----
-
 ## Usage
 
 ```python
@@ -32,8 +26,6 @@ import mode_client
 client = mode_client.ModeClient("workspace", "token", "password")
 print(client.space.list())
 ```
-
----
 
 ## API
 
@@ -47,8 +39,6 @@ The following objects and methods are implemented:
 | [report_run](https://mode.com/developer/api-reference/analytics/report-runs/)                 | `get(report, run) -> ReportRun`<br/>`list(report) -> ReportRuns`<br/>`clone(report, run) -> ReportRun`<br/>`create(report, parameters) -> ReportRun`                                                                                                                |
 | [query](https://mode.com/developer/api-reference/analytics/queries/)                          | `get(report, query) -> Query`<br/>`list(report) -> List[Query]`<br/>`create(report, raw_query, data_source_id, name)`<br/>`update(report, query, [raw_query], [data_source_id], [name]) -> Query`<br/>`delete(report, query)`                                       |
 | [query_run](https://mode.com/developer/api-reference/analytics/query-runs/)                   | `get(report, run, query_run) -> QueryRun`<br/>`list(report, run) -> List[QueryRun]`                                                                                                                                                                                 |
-
----
 
 ## FAQ
 
