@@ -206,7 +206,7 @@ class Query(BaseModel):
     created_at: str
     updated_at: str
     name: str
-    last_run_id: str
+    last_run_id: Optional[str]
     data_source_id: str
     explorations_count: int
     report_imports_count: int

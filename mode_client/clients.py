@@ -75,22 +75,25 @@ class ModeQueryClient(ModeBaseClient):
                 "name": name,
             }
         }
-        response = self.request("POST", f"/reports/{report}/queries", json=json)
-
-        return Query.parse_obj(response)
+        self.request("POST", f"/reports/{report}/queries", json=json)
 
     def update(
-        self, report: str, query: str, raw_query: str, data_source_id: int, name: str
+        self,
+        report: str,
+        query: str,
+        raw_query: Optional[str] = None,
+        data_source_id: Optional[int] = None,
+        name: Optional[str] = None,
     ) -> Query:
-        json = {
-            "query": {
-                "raw_query": raw_query,
-                "data_source_id": data_source_id,
-                "name": name,
-            }
+        raw_json = {
+            "raw_query": raw_query,
+            "data_source_id": data_source_id,
+            "name": name,
         }
+        json = {k: v for k, v in raw_json.items() if v is not None}
+
         response = self.request(
-            "PATCH", f"/reports/{report}/queries/{query}", json=json
+            "PATCH", f"/reports/{report}/queries/{query}", json={"query": json}
         )
 
         return Query.parse_obj(response)
@@ -141,6 +144,23 @@ class ModeReportClient(ModeBaseClient):
         response = self.request("GET", url, params=params)
 
         return parse_obj_as(List[Report], response["_embedded"]["reports"])
+
+    def update(
+        self,
+        report: str,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        space_token: Optional[str] = None,
+    ) -> Report:
+        raw_json = {
+            "name": name,
+            "description": description,
+            "space_token": space_token,
+        }
+        json = {k: v for k, v in raw_json.items() if v is not None}
+        response = self.request("PATCH", f"/reports/{report}", json={"report": json})
+
+        return Report.parse_obj(response)
 
     def delete(self, report: str) -> None:
         self.request("DELETE", f"/reports/{report}")
@@ -210,9 +230,12 @@ class ModeSpaceClient(ModeBaseClient):
 
         return Space.parse_obj(response)
 
-    def update(self, space: str, name: str, description: str) -> Space:
-        json = {"space": {"name": name, "description": description}}
-        response = self.request("POST", f"/spaces/{space}", json=json)
+    def update(
+        self, space: str, name: Optional[str] = None, description: Optional[str] = None
+    ) -> Space:
+        raw_json = {"name": name, "description": description}
+        json = {k: v for k, v in raw_json.items() if v is not None}
+        response = self.request("POST", f"/spaces/{space}", json={"space": json})
 
         return Space.parse_obj(response)
 
