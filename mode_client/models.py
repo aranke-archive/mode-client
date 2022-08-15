@@ -283,15 +283,17 @@ class Report(BaseModel):
 
 class ReportRun(BaseModel):
     token: str
-    state: Optional[Literal[
-        "pending",
-        "enqueued",
-        "cancelled",
-        "failed",
-        "succeeded",
-        "completed",
-        "running_notebook",
-    ]]
+    state: Optional[
+        Literal[
+            "pending",
+            "enqueued",
+            "cancelled",
+            "failed",
+            "succeeded",
+            "completed",
+            "running_notebook",
+        ]
+    ]
     created_at: str
     updated_at: str
     completed_at: Optional[str]
