@@ -11,6 +11,7 @@ from mode_client import ModeClient
 def throttle():
     time.sleep(3)
 
+
 @pytest.fixture
 def report_id():
     return "8772ad79bc3f"
