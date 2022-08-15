@@ -1,4 +1,3 @@
-from datetime import date, timedelta
 from json import JSONDecodeError
 from typing import Any, Dict, List, Literal, Optional
 
@@ -143,28 +142,12 @@ class ModeReportClient(ModeBaseClient):
 
         return parse_obj_as(List[Report], response["_embedded"]["reports"])
 
-    def update(
-        self, report: str, name: str, description: str, space_token: str
-    ) -> Report:
-        json = {"name": name, "description": description, "space_token": space_token}
-        response = self.request("PATCH", f"/reports/{report}", json=json)
-
-        return Report.parse_obj(response)
-
     def delete(self, report: str) -> None:
         self.request("DELETE", f"/reports/{report}")
 
     def archive(self, report: str) -> Report:
         response = self.request("PATCH", f"/reports/{report}/archive")
         return Report.parse_obj(response)
-
-    def purge(self, purge_date: date) -> None:
-        assert purge_date < date.today() - timedelta(
-            days=15
-        ), "time cannot be within the past 15 days"
-        json = {"time": purge_date.isoformat()}
-
-        self.request("POST", "/reports/purge", json=json)
 
     def unarchive(self, report: str) -> Report:
         response = self.request("PATCH", f"/reports/{report}/unarchive")
@@ -217,11 +200,7 @@ class ModeSpaceClient(ModeBaseClient):
     def list(self, filter_: Literal["all", "custom"] = "custom") -> List[Space]:
         params = {"filter": filter_}
         response = self.request("GET", "/spaces", params=params)
-
         spaces = response["_embedded"]["spaces"]
-
-        if not filter_:
-            spaces = [space for space in spaces if space["space_type"] != "private"]
 
         return parse_obj_as(List[Space], spaces)
 

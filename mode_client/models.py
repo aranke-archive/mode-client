@@ -208,8 +208,8 @@ class Query(BaseModel):
     name: str
     last_run_id: str
     data_source_id: str
-    explorations_count: str
-    report_imports_count: str
+    explorations_count: int
+    report_imports_count: int
     mapping_id: Optional[str]
     _links: QueryLinks
 
@@ -244,7 +244,7 @@ class Report(BaseModel):
     description: Optional[str]
     created_at: str
     updated_at: str
-    published_at: str
+    published_at: Optional[str]
     edited_at: str
     theme_id: Optional[int]
     color_mappings: Optional[dict]
@@ -271,13 +271,13 @@ class Report(BaseModel):
     last_successful_run_token: str
     flamingo_signature: Optional[str]
     github_link: Optional[str]
-    query_count: str
-    max_query_count: str
-    chart_count: Optional[str]
-    runs_count: str
-    schedules_count: Optional[str]
+    query_count: int
+    max_query_count: int
+    chart_count: Optional[int]
+    runs_count: int
+    schedules_count: Optional[int]
     query_preview: str
-    view_count: str
+    view_count: int
     _links: ReportLinks
 
 
@@ -342,7 +342,7 @@ class Account(BaseModel):
     user: bool
     space_count: Optional[int]
     data_source_count: Optional[int]
-    organizations_count: Optional[str]
+    organizations_count: Optional[int]
     trial_state: Optional[Literal["pending", "active", "expired"]]
     membership_type: Optional[Literal["admin", "full"]]
     payment_method_confirmed: Optional[bool]
