@@ -211,7 +211,7 @@ class Query(BaseModel):
     explorations_count: int
     report_imports_count: int
     mapping_id: Optional[str]
-    _links: QueryLinks
+    links: QueryLinks = Field(alias="_links")
 
 
 class QueryRun(BaseModel):
@@ -234,7 +234,7 @@ class QueryRun(BaseModel):
     error_code: Optional[str]
     error_type: Optional[str]
     error_message: Optional[str]
-    _links: QueryRunLinks
+    links: QueryRunLinks = Field(alias="_links")
 
 
 class Report(BaseModel):
@@ -278,7 +278,7 @@ class Report(BaseModel):
     schedules_count: Optional[int]
     query_preview: str
     view_count: int
-    _links: ReportLinks
+    links: ReportLinks = Field(alias="_links")
 
 
 class ReportRun(BaseModel):
@@ -306,7 +306,7 @@ class ReportRun(BaseModel):
     is_latest_report_run: bool
     is_latest_successful_report_run: bool
     report_has_failures_since_last_success: bool
-    _links: ReportRunLinks
+    links: ReportRunLinks = Field(alias="_links")
 
 
 class ReportRuns(BaseModel):
@@ -326,7 +326,7 @@ class Space(BaseModel):
     viewable_: str = Field(..., alias="viewable?")
     viewed_: Optional[str] = Field(None, alias="viewed?")
     default_access_level: Optional[str]
-    _links: SpaceLinks
+    links: SpaceLinks = Field(alias="_links")
 
 
 class Account(BaseModel):
@@ -354,4 +354,4 @@ class Account(BaseModel):
     scim_enabled: Optional[str]
     created_at: str
     settings: Optional[dict]
-    _links: AccountLinks
+    links: AccountLinks = Field(alias="_links")

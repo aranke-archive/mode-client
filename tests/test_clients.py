@@ -7,6 +7,21 @@ from mode_client import ModeClient
 
 
 @pytest.fixture
+def report_id():
+    return "8772ad79bc3f"
+
+
+@pytest.fixture
+def space_id():
+    return "9764afb6d669"
+
+
+@pytest.fixture
+def query_id():
+    return "f864867b8c7c"
+
+
+@pytest.fixture
 def client():
     load_dotenv()
     return ModeClient(
@@ -35,33 +50,42 @@ def test_space_get(client):
     assert space.name == "Mode Client"
 
 
-def test_report_list_space(client):
-    spaces = client.space.list()
-    space = spaces[0].token
-
-    reports = client.report.list(space=space)
-    assert set(r.token for r in reports) == {"8772ad79bc3f"}
+def test_report_list_space(client, space_id, report_id):
+    reports = client.report.list(space=space_id)
+    assert set(r.token for r in reports) == {report_id}
 
 
-def test_report_get(client):
-    report = client.report.get("8772ad79bc3f")
+def test_report_get(client, report_id):
+    report = client.report.get(report_id)
     assert report.name == "Dunder Mifflin"
     assert report.description == "A dashboard showing Dunder Mifflin sales"
     assert report.type == "Report"
     assert report.account_username == "mode_client"
     assert report.chart_count == 2
-    assert report.query_count == 1
+    assert report.query_count == 2
+    assert report.archived is False
+    assert report.links.creator.href == "/api/kshitij_aranke"
+
+
+def test_report_archive(client, report_id):
+    report = client.report.get(report_id)
     assert report.archived is False
 
-
-def test_report_archive(client):
-    report = client.report.get("8772ad79bc3f")
-    assert report.archived is False
-
-    client.report.archive("8772ad79bc3f")
-    report = client.report.get("8772ad79bc3f")
+    client.report.archive(report_id)
+    report = client.report.get(report_id)
     assert report.archived is True
 
-    client.report.unarchive("8772ad79bc3f")
-    report = client.report.get("8772ad79bc3f")
+    client.report.unarchive(report_id)
+    report = client.report.get(report_id)
     assert report.archived is False
+
+
+def test_query_list(client, report_id):
+    queries = client.query.list(report_id)
+    assert set(q.name for q in queries) == {"Query 1", "Query 2"}
+
+
+def test_query_get(client, report_id, query_id):
+    query = client.query.get(report_id, query_id)
+    assert query.name == "Query 1"
+    assert query.raw_query.startswith("-- Returns first 100 rows")
