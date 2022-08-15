@@ -12,6 +12,7 @@ def throttle():
     yield
     time.sleep(3)
 
+
 @pytest.fixture
 def report_id():
     return "8772ad79bc3f"
