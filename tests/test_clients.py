@@ -1,4 +1,5 @@
 import os
+import time
 
 import pytest
 from dotenv import load_dotenv
@@ -91,6 +92,20 @@ def test_report_update(client, report_id):
     assert report.name == "Dunder Mifflin"
 
 
+def test_report_run(client, report_id):
+    report_runs = client.report_run.list(report_id)
+    num_runs = report_runs.pagination.total_count
+    assert num_runs > 0
+
+    latest_run = report_runs.report_runs[0]
+    assert latest_run.token == client.report_run.get(report_id, latest_run.token).token
+
+    created_report = client.report_run.create(report_id, {})
+    report_runs = client.report_run.list(report_id)
+    assert created_report.token == report_runs.report_runs[0].token
+    assert report_runs.pagination.total_count == num_runs + 1
+
+
 def test_query_list(client, report_id):
     queries = client.query.list(report_id)
     assert set(q.name for q in queries) == {"Query 1", "Query 2"}
@@ -126,3 +141,14 @@ def test_query_create(client, report_id):
     client.query.delete(report_id, query.token)
     queries = client.query.list(report_id)
     assert set(q.name for q in queries) == {"Query 1", "Query 2"}
+
+
+def test_query_run(client, report_id):
+    latest_run = client.report_run.list(report_id).report_runs[0].token
+    query_runs = client.query_run.list(report_id, latest_run)
+    assert len(query_runs) > 0
+
+    query_run = query_runs[0].token
+    query_run_data = client.query_run.get(report_id, latest_run, query_run)
+
+    assert query_run_data.token == query_run

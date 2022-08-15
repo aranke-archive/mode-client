@@ -90,12 +90,12 @@ class ReportRunLinks(BaseModel):
     preview: Optional[Link]
     account: Link
     report_schedule: Optional[Link]
-    executed_by: Link
+    executed_by: Optional[Link]
     share: Optional[Link]
     embed: Optional[Link]
-    report: Link
+    report: Optional[Link]
     clone: Optional[Link]
-    query_runs: Link
+    query_runs: Optional[Link]
     python_cell_runs: Optional[Link]
     pdf_export: Optional[Link]
     web_clone: Optional[Link]
@@ -221,7 +221,7 @@ class QueryRun(BaseModel):
     statement_annotation: Optional[str]
     state: str
     created_at: str
-    completed_at: str
+    completed_at: Optional[str]
     data_source_id: str
     limit: str
     query_token: str
@@ -283,7 +283,7 @@ class Report(BaseModel):
 
 class ReportRun(BaseModel):
     token: str
-    state: Literal[
+    state: Optional[Literal[
         "pending",
         "enqueued",
         "cancelled",
@@ -291,10 +291,10 @@ class ReportRun(BaseModel):
         "succeeded",
         "completed",
         "running_notebook",
-    ]
+    ]]
     created_at: str
     updated_at: str
-    completed_at: str
+    completed_at: Optional[str]
     purge_started_at: Optional[str]
     purge_completed_at: Optional[str]
     python_state: Optional[
@@ -302,11 +302,11 @@ class ReportRun(BaseModel):
     ]
     form_fields: Optional[list]
     flamingo_signature: str
-    flamingo_host: str
-    is_latest_report_run: bool
-    is_latest_successful_report_run: bool
-    report_has_failures_since_last_success: bool
-    links: ReportRunLinks = Field(alias="_links")
+    flamingo_host: Optional[str]
+    is_latest_report_run: Optional[bool]
+    is_latest_successful_report_run: Optional[bool]
+    report_has_failures_since_last_success: Optional[bool]
+    links: Optional[ReportRunLinks] = Field(alias="_links")
 
 
 class ReportRuns(BaseModel):
