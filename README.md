@@ -55,7 +55,7 @@ If you'd like to see an object or method supported, please file a [GitHub issue]
 
 ### I'm getting a `429 Too Many Requests` error. What do I do?
 
-Mode throttles clients to ~1 request/second. 
+Mode throttles clients to ~1 request/second.
 If you're running into this error use `time.sleep` to slow down your requests.
 
 ### Why doesn't `mode-client` support Python 3.7?
