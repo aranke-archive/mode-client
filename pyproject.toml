@@ -6,7 +6,7 @@ authors = ["Kshitij Aranke <kshitij@aranke.org>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 pydantic = "^1.9"
 httpx = "^0.23"
 
