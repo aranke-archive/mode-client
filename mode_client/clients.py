@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from json import JSONDecodeError
-from typing import Any, Literal, Optional, List, Dict
+from typing import Any, Dict, List, Literal, Optional
 
 import httpx
 from pydantic import parse_obj_as
