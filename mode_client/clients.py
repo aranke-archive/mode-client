@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from json import JSONDecodeError
-from typing import Any, Literal, Optional
+from typing import Any, Literal, Optional, List, Dict
 
 import httpx
 from pydantic import parse_obj_as
@@ -29,8 +29,8 @@ class ModeBaseClient:
         self,
         method: str,
         resource: str,
-        json: Optional[dict[str, Any]] = None,
-        params: Optional[dict[str, Any]] = None,
+        json: Optional[Dict[str, Any]] = None,
+        params: Optional[Dict[str, Any]] = None,
     ) -> Any:
         if params:
             params = {k: v for k, v in params.items() if v}
@@ -62,10 +62,10 @@ class ModeQueryClient(ModeBaseClient):
 
         return Query.parse_obj(response)
 
-    def list(self, report: str) -> list[Query]:
+    def list(self, report: str) -> List[Query]:
         response = self.request("GET", f"/reports/{report}/queries")
 
-        return parse_obj_as(list[Query], response["_embedded"]["queries"])
+        return parse_obj_as(List[Query], response["_embedded"]["queries"])
 
     def create(self, report: str, raw_query: str, data_source_id: int, name: str) -> None:
         json = {
@@ -110,10 +110,10 @@ class ModeQueryRunClient(ModeBaseClient):
 
         return QueryRun.parse_obj(response)
 
-    def list(self, report: str, run: str) -> list[QueryRun]:
+    def list(self, report: str, run: str) -> List[QueryRun]:
         response = self.request("GET", f"/reports/{report}/runs/{run}/query_runs")
 
-        return parse_obj_as(list[QueryRun], response["_embedded"]["query_runs"])
+        return parse_obj_as(List[QueryRun], response["_embedded"]["query_runs"])
 
 
 class ModeReportClient(ModeBaseClient):
@@ -122,11 +122,11 @@ class ModeReportClient(ModeBaseClient):
 
         return Report.parse_obj(response)
 
-    def list(self, space: str) -> list[Report]:
+    def list(self, space: str) -> List[Report]:
         params = {"order": "desc", "order_by": "updated_at"}
         response = self.request("GET", f"/spaces/{space}/reports", params=params)
 
-        return parse_obj_as(list[Report], response["_embedded"]["reports"])
+        return parse_obj_as(List[Report], response["_embedded"]["reports"])
 
     def update(
         self,
@@ -184,7 +184,7 @@ class ModeReportRunClient(ModeBaseClient):
         response = self.request("POST", f"/reports/{report}/runs/{run}/clone")
         return ReportRun.parse_obj(response)
 
-    def create(self, report: str, parameters: dict[str, Any]) -> ReportRun:
+    def create(self, report: str, parameters: Dict[str, Any]) -> ReportRun:
         response = self.request(
             "POST", f"/reports/{report}/runs", json={"parameters": parameters}
         )
@@ -196,12 +196,12 @@ class ModeSpaceClient(ModeBaseClient):
         response = self.request("GET", f"/spaces/{space}")
         return Space.parse_obj(response)
 
-    def list(self, filter_: Literal["all", "custom"] = "custom") -> list[Space]:
+    def list(self, filter_: Literal["all", "custom"] = "custom") -> List[Space]:
         params = {"filter": filter_}
         response = self.request("GET", "/spaces", params=params)
         spaces = response["_embedded"]["spaces"]
 
-        return parse_obj_as(list[Space], spaces)
+        return parse_obj_as(List[Space], spaces)
 
     def create(self, name: str, description: str) -> Space:
         json = {"space": {"name": name, "description": description}}

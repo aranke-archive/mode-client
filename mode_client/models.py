@@ -1,6 +1,4 @@
-from __future__ import annotations
-
-from typing import List, Literal, Optional, Union, Any
+from typing import List, Literal, Optional, Union, Any, Dict
 
 from pydantic import BaseModel, Field
 
@@ -222,7 +220,7 @@ class QueryRun(BaseModel):
     query_token: str
     query_name: str
     query_created_at: str
-    parameters: dict[str, Any]
+    parameters: Dict[str, str]
     rendered_source: Optional[str]
     max_result_bytes: str
     help_url: Optional[str]
@@ -242,7 +240,7 @@ class Report(BaseModel):
     published_at: Optional[str]
     edited_at: str
     theme_id: Optional[int]
-    color_mappings: Optional[dict[str, Any]]
+    color_mappings: Optional[Dict[str, Any]]
     type: str
     last_successful_sync_at: Optional[str]
     last_saved_at: str
@@ -297,7 +295,7 @@ class ReportRun(BaseModel):
     python_state: Optional[
         Literal["none", "pending", "failed", "submitted", "succeeded", "skipped"]
     ]
-    form_fields: Optional[list[Any]]
+    form_fields: Optional[List[Any]]
     flamingo_signature: str
     flamingo_host: Optional[str]
     is_latest_report_run: Optional[bool]
@@ -350,5 +348,5 @@ class Account(BaseModel):
     admin_data_source_connections_only: Optional[bool]
     scim_enabled: Optional[str]
     created_at: str
-    settings: Optional[dict[str, Any]]
+    settings: Optional[Dict[str, Any]]
     links: AccountLinks = Field(alias="_links")
