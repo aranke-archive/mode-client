@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from json import JSONDecodeError
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Literal, Optional
 
 import httpx
 from pydantic import parse_obj_as
@@ -27,8 +29,8 @@ class ModeBaseClient:
         self,
         method: str,
         resource: str,
-        json: Optional[Dict] = None,
-        params: Optional[Dict] = None,
+        json: Optional[dict[str, Any]] = None,
+        params: Optional[dict[str, Any]] = None,
     ) -> Any:
         if params:
             params = {k: v for k, v in params.items() if v}
@@ -60,12 +62,12 @@ class ModeQueryClient(ModeBaseClient):
 
         return Query.parse_obj(response)
 
-    def list(self, report: str) -> List[Query]:
+    def list(self, report: str) -> list[Query]:
         response = self.request("GET", f"/reports/{report}/queries")
 
-        return parse_obj_as(List[Query], response["_embedded"]["queries"])
+        return parse_obj_as(list[Query], response["_embedded"]["queries"])
 
-    def create(self, report: str, raw_query: str, data_source_id: int, name: str):
+    def create(self, report: str, raw_query: str, data_source_id: int, name: str) -> None:
         json = {
             "query": {
                 "raw_query": raw_query,
@@ -96,7 +98,7 @@ class ModeQueryClient(ModeBaseClient):
 
         return Query.parse_obj(response)
 
-    def delete(self, report: str, query: str):
+    def delete(self, report: str, query: str) -> None:
         self.request("DELETE", f"/reports/{report}/queries/{query}")
 
 
@@ -108,10 +110,10 @@ class ModeQueryRunClient(ModeBaseClient):
 
         return QueryRun.parse_obj(response)
 
-    def list(self, report: str, run: str) -> List[QueryRun]:
+    def list(self, report: str, run: str) -> list[QueryRun]:
         response = self.request("GET", f"/reports/{report}/runs/{run}/query_runs")
 
-        return parse_obj_as(List[QueryRun], response["_embedded"]["query_runs"])
+        return parse_obj_as(list[QueryRun], response["_embedded"]["query_runs"])
 
 
 class ModeReportClient(ModeBaseClient):
@@ -120,11 +122,11 @@ class ModeReportClient(ModeBaseClient):
 
         return Report.parse_obj(response)
 
-    def list(self, space: str) -> List[Report]:
+    def list(self, space: str) -> list[Report]:
         params = {"order": "desc", "order_by": "updated_at"}
         response = self.request("GET", f"/spaces/{space}/reports", params=params)
 
-        return parse_obj_as(List[Report], response["_embedded"]["reports"])
+        return parse_obj_as(list[Report], response["_embedded"]["reports"])
 
     def update(
         self,
@@ -143,7 +145,7 @@ class ModeReportClient(ModeBaseClient):
 
         return Report.parse_obj(response)
 
-    def delete(self, report: str):
+    def delete(self, report: str) -> None:
         self.request("DELETE", f"/reports/{report}")
 
     def archive(self, report: str) -> Report:
@@ -182,7 +184,7 @@ class ModeReportRunClient(ModeBaseClient):
         response = self.request("POST", f"/reports/{report}/runs/{run}/clone")
         return ReportRun.parse_obj(response)
 
-    def create(self, report: str, parameters: Dict[str, Any]) -> ReportRun:
+    def create(self, report: str, parameters: dict[str, Any]) -> ReportRun:
         response = self.request(
             "POST", f"/reports/{report}/runs", json={"parameters": parameters}
         )
@@ -194,12 +196,12 @@ class ModeSpaceClient(ModeBaseClient):
         response = self.request("GET", f"/spaces/{space}")
         return Space.parse_obj(response)
 
-    def list(self, filter_: Literal["all", "custom"] = "custom") -> List[Space]:
+    def list(self, filter_: Literal["all", "custom"] = "custom") -> list[Space]:
         params = {"filter": filter_}
         response = self.request("GET", "/spaces", params=params)
         spaces = response["_embedded"]["spaces"]
 
-        return parse_obj_as(List[Space], spaces)
+        return parse_obj_as(list[Space], spaces)
 
     def create(self, name: str, description: str) -> Space:
         json = {"space": {"name": name, "description": description}}
@@ -216,7 +218,7 @@ class ModeSpaceClient(ModeBaseClient):
 
         return Space.parse_obj(response)
 
-    def delete(self, space: str):
+    def delete(self, space: str) -> None:
         self.request("DELETE", f"/spaces/{space}")
 
 
@@ -227,25 +229,25 @@ class ModeClient:
         self.password = password
 
     @property
-    def account(self):
+    def account(self) -> ModeAccountClient:
         return ModeAccountClient(self.workspace, self.token, self.password)
 
     @property
-    def query(self):
+    def query(self) -> ModeQueryClient:
         return ModeQueryClient(self.workspace, self.token, self.password)
 
     @property
-    def query_run(self):
+    def query_run(self) -> ModeQueryRunClient:
         return ModeQueryRunClient(self.workspace, self.token, self.password)
 
     @property
-    def report(self):
+    def report(self) -> ModeReportClient:
         return ModeReportClient(self.workspace, self.token, self.password)
 
     @property
-    def report_run(self):
+    def report_run(self) -> ModeReportRunClient:
         return ModeReportRunClient(self.workspace, self.token, self.password)
 
     @property
-    def space(self):
+    def space(self) -> ModeSpaceClient:
         return ModeSpaceClient(self.workspace, self.token, self.password)
